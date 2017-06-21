@@ -10,10 +10,19 @@ See the changelog for a full list of changes.
 * system.conf and startup.conf have been dropped entirely, use defaults.conf and runtime.conf instead
 * Many bots have been renamed/moved or deleted. Please read the Bots section in the changelog and upgrade your configuration accordingly.
 
-in development
---------------
+development
+-----------
+
+1.0.0.dev8
+----------
 ### Configuration
 - `http_timeout` has been renamed to `http_timeout_sec` and `http_timeout_max_tries` has been added.
+
+### Configuration
+Two new fields have been added to `defaults.conf` which are expected by the bots:
+- `"log_processed_messages_count": 500` and
+- `'log_processed_messages_seconds": 900`
+Configure them in your setup and optionally adapt the values to your needs.
 
 ### Postgres databases
 Use the following statement carefully to upgrade your database.
