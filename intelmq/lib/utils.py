@@ -171,7 +171,11 @@ def load_configuration(configuration_filepath: str) -> dict:
         template = env.get_template(config_filename)
         config_str = template.render(env=os.environ)
 
-        config = json.loads(config_str)
+        try:
+            config = json.loads(config_str)
+        except json.decoder.JSONDecodeError as e:
+            raise ValueError("Error processing JSON in {}: {}. Config: {}"
+                    .format(configuration_filepath, e, config_str))
     else:
         raise ValueError('File not found: %r.' % configuration_filepath)
     return config
