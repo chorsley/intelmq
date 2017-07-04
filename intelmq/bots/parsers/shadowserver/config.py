@@ -52,6 +52,7 @@ def get_feed(feedname):
         "Accessible-Telnet": accessible_telnet,
         "Accessible-VNC": accessible_vnc,
         "Blacklisted-IP": blacklisted_ip,
+        "Botnet-CCIP": botnet_ccip,  # TODO Recheck the format and field's names - in the latest/new reports they can be different
         "Botnet-Drone-Hadoop": botnet_drone_hadoop,
         "Compromised-Website": compromised_website,
         "DNS-open-resolvers": dns_open_resolvers,
@@ -1108,6 +1109,29 @@ vulnerable_isakmp = {
         'classification.identifier': 'openike',
     }
 }
+
+# https://www.shadowserver.org/wiki/pmwiki.php/Services/BotnetCCIP
+botnet_ccip = {
+    'required_fields': [
+            ('time.source', 'first_seen', add_UTC_to_timestamp),
+            ('source.ip', 'ip'),
+            ('source.port', 'port'),
+        ],
+    'optional_fields': [
+            ('extra.', 'channel', validate_to_none),
+            ('source.asn', 'asn'),
+            ('source.as_name', 'as_name'),
+            ('source.geolocation.cc', 'geo'),
+            ('source.geolocation.region', 'region'),
+            ('source.geolocation.city', 'city'),
+            ('source.fqdn', 'domain'),
+        ],
+    'constant_fields': {
+            'classification.type': 'c&c',
+            'feed.code': 'shadowserver-botnet-ccip',
+        }
+}
+
 
 # https://www.shadowserver.org/wiki/pmwiki.php/Services/Accessible-RDP
 accessible_rdp = {
