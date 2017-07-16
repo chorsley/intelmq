@@ -60,6 +60,8 @@ How to Install
 
 See `INSTALL <docs/INSTALL.md>`__.
 
+For existing installations, see `UPGRADING <docs/UPGRADING.md>`__.
+
 Developers Guide
 ================
 

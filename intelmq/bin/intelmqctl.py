@@ -12,8 +12,7 @@ import pkg_resources
 import psutil
 
 from intelmq import (DEFAULTS_CONF_FILE, PIPELINE_CONF_FILE, RUNTIME_CONF_FILE,
-                     STARTUP_CONF_FILE, SYSTEM_CONF_FILE, VAR_RUN_PATH,
-                     BOTS_FILE)
+                     VAR_RUN_PATH, BOTS_FILE)
 from intelmq.lib import utils
 from intelmq.lib.bot_debugger import BotDebugger
 from intelmq.lib.pipeline import PipelineFactory
@@ -46,6 +45,7 @@ ERROR_MESSAGES = {
     'stopped': '%s was NOT RUNNING.',
     'stopping': '%s failed to STOP.',
     'not found': '%s failed to START because the file cannot be found.',
+    'access denied': '%s failed to %s because of missing permissions.',
 }
 
 LOG_LEVEL = {
@@ -193,16 +193,20 @@ class IntelMQProcessManager:
             return 'stopped'
         log_bot_message('stopping', bot_id)
         proc = psutil.Process(int(pid))
-        proc.send_signal(signal.SIGINT)
-
-        if getstatus:
-            time.sleep(0.5)
-            if self.__status_process(pid):
-                log_bot_error('running', bot_id)
-                return 'running'
-            self.__remove_pidfile(bot_id)
-            log_bot_message('stopped', bot_id)
-            return 'stopped'
+        try:
+            proc.send_signal(signal.SIGINT)
+        except psutil.AccessDenied:
+            log_bot_error('access denied', bot_id, 'STOP')
+            return 'running'
+        else:
+            if getstatus:
+                time.sleep(0.5)
+                if self.__status_process(pid):
+                    log_bot_error('running', bot_id)
+                    return 'running'
+                self.__remove_pidfile(bot_id)
+                log_bot_message('stopped', bot_id)
+                return 'stopped'
 
     def bot_reload(self, bot_id, getstatus=True):
         pid = self.__read_pidfile(bot_id)
@@ -219,14 +223,19 @@ class IntelMQProcessManager:
             return 'stopped'
         log_bot_message('reloading', bot_id)
         proc = psutil.Process(int(pid))
-        proc.send_signal(signal.SIGHUP)
-        if getstatus:
-            time.sleep(0.5)
-            if self.__status_process(pid):
-                log_bot_message('running', bot_id)
-                return 'running'
-            log_bot_error('stopped', bot_id)
-            return 'stopped'
+        try:
+            proc.send_signal(signal.SIGHUP)
+        except psutil.AccessDenied:
+            log_bot_error('access denied', bot_id, 'RELOAD')
+            return 'running'
+        else:
+            if getstatus:
+                time.sleep(0.5)
+                if self.__status_process(pid):
+                    log_bot_message('running', bot_id)
+                    return 'running'
+                log_bot_error('stopped', bot_id)
+                return 'stopped'
 
     def bot_status(self, bot_id):
         pid = self.__read_pidfile(bot_id)
@@ -270,6 +279,11 @@ class IntelMQProcessManager:
             return True
         except psutil.NoSuchProcess:
             return False
+        except psutil.AccessDenied:
+            self.logger.error('Could not get status of process: Access denied.')
+            return False
+        except:
+            raise
 
 
 PROCESS_MANAGER = {'intelmq': IntelMQProcessManager}
@@ -371,7 +385,6 @@ Outputs are additionally logged to /opt/intelmq/var/log/intelmqctl'''
         # this will not work with various instances of REDIS
         self.parameters = Parameters()
         self.load_defaults_configuration()
-        self.load_system_configuration()
         try:
             self.pipeline_configuration = utils.load_configuration(PIPELINE_CONF_FILE)
         except ValueError as exc:  # pragma: no cover
@@ -381,21 +394,6 @@ Outputs are additionally logged to /opt/intelmq/var/log/intelmqctl'''
             self.runtime_configuration = utils.load_configuration(RUNTIME_CONF_FILE)
         except ValueError as exc:  # pragma: no cover
             self.abort('Error loading %r: %s' % (RUNTIME_CONF_FILE, exc))
-
-        if os.path.exists(STARTUP_CONF_FILE):
-            self.logger.warning('Deprecated startup.conf file found, please migrate to runtime.conf soon.')
-            with open(STARTUP_CONF_FILE, 'r') as fp:
-                startup = json.load(fp)
-                for bot_id, bot_values in startup.items():
-                    if 'parameters' in self.runtime_configuration[bot_id]:  # pragma: no cover
-                        self.abort('Mixed setup of new runtime.conf and old startup.conf'
-                                   ' found. Ignoring startup.conf, please fix this!')
-                    params = self.runtime_configuration[bot_id].copy()
-                    self.runtime_configuration[bot_id].clear()
-                    self.runtime_configuration[bot_id]['parameters'] = params
-                    self.runtime_configuration[bot_id].update(bot_values)
-            if self.write_updated_runtime_config(filename=RUNTIME_CONF_FILE + '.new'):
-                self.logger.info('%r with new format written.', RUNTIME_CONF_FILE + '.new')
 
         process_manager = getattr(self.parameters, 'process_manager', 'intelmq')
         if process_manager not in PROCESS_MANAGER:
@@ -524,15 +522,6 @@ Outputs are additionally logged to /opt/intelmq/var/log/intelmqctl'''
             parser_status.set_defaults(func=self.bot_disable)
 
             self.parser = parser
-
-    def load_system_configuration(self):
-        if os.path.exists(SYSTEM_CONF_FILE):
-            try:
-                config = utils.load_configuration(SYSTEM_CONF_FILE)
-            except ValueError as exc:  # pragma: no cover
-                self.abort('Error loading %r: %s' % (SYSTEM_CONF_FILE, exc))
-            for option, value in config.items():
-                setattr(self.parameters, option, value)
 
     def load_defaults_configuration(self):
         # Load defaults configuration
@@ -676,8 +665,6 @@ Outputs are additionally logged to /opt/intelmq/var/log/intelmqctl'''
             raise ValueError(message)
 
     def write_updated_runtime_config(self, filename=RUNTIME_CONF_FILE):
-        if os.path.exists(STARTUP_CONF_FILE):
-            self.abort('Can\'t update runtime configuration, startup.conf found.')
         try:
             with open(RUNTIME_CONF_FILE, 'w') as handle:
                 json.dump(self.runtime_configuration, fp=handle, indent=4, sort_keys=True,
@@ -688,7 +675,7 @@ Outputs are additionally logged to /opt/intelmq/var/log/intelmqctl'''
 
     def list_bots(self):
         """
-        Lists all configured bots from startup.conf with bot id and
+        Lists all configured bots from runtime.conf with bot id and
         description.
 
         If description is not set, None is used instead.
@@ -841,13 +828,6 @@ Outputs are additionally logged to /opt/intelmq/var/log/intelmqctl'''
         if retval:
             self.logger.error('Fatal errors occurred.')
             return retval
-
-        if os.path.exists(STARTUP_CONF_FILE):
-            self.logger.warning('Deprecated startup.conf file found, migrate to runtime.conf.')
-            retval = 1
-        if os.path.exists(SYSTEM_CONF_FILE):
-            self.logger.warning('Deprecated system.conf file found, migrate to defaults.conf.')
-            retval = 1
 
         self.logger.info('Checking runtime configuration.')
         http_proxy = files[DEFAULTS_CONF_FILE].get('http_proxy')
