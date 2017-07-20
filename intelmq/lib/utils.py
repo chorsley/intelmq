@@ -20,7 +20,6 @@ import os
 import re
 import sys
 import traceback
-import jinja2
 
 from typing import Sequence, Optional, Union
 
@@ -164,18 +163,8 @@ def load_configuration(configuration_filepath: str) -> dict:
         ValueError: if file not found
     """
     if os.path.exists(configuration_filepath):
-        config_path, config_filename = os.path.split(configuration_filepath)
-        env = jinja2.Environment(
-            loader=jinja2.FileSystemLoader(config_path),
-            undefined=jinja2.StrictUndefined)
-        template = env.get_template(config_filename)
-        config_str = template.render(env=os.environ)
-
-        try:
-            config = json.loads(config_str)
-        except json.decoder.JSONDecodeError as e:
-            raise ValueError("Error processing JSON in {}: {}. Config: {}"
-                    .format(configuration_filepath, e, config_str))
+        with open(configuration_filepath, 'r') as fpconfig:
+            config = json.loads(fpconfig.read())
     else:
         raise ValueError('File not found: %r.' % configuration_filepath)
     return config
