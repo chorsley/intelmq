@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?><IODEF-Document version="1.00" 
+        xmlns="urn:ietf:params:xml:ns:iodef"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="urn:ietf:params:xmlns:schema:iodef"  lang="en-US">
+    <Incident restriction="private" purpose="reporting">
+        <IncidentID name="asert.arbor.net" restriction="public">Arbor-767e57da09b9a3d0</IncidentID>
+        <DetectTime>2017-06-20T04:32:45-00:00</DetectTime>
+        <ReportTime>2017-06-21T09:23:43-00:00</ReportTime>
+        <Assessment>
+            <Impact type="dos"/>
+        </Assessment>
+        <EventData restriction="default">
+            <StartTime>2017-06-20T04:32:45-00:00</StartTime>
+            <EndTime>2017-06-20T04:38:47-00:00</EndTime>
+            <Flow>
+                <System category="target" spoofed="unknown">
+                    <Node>
+                        <Address category="ipv4-net">203.0.113.1</Address>
+                    </Node>
+                </System>
+            </Flow>
+            <Expectation action="investigate" restriction="default">
+                <Description lang="en-US">Investigate system for possible disruption</Description>
+            </Expectation>
+            <AdditionalData lang="en-US">System was victim of traffic flood</AdditionalData>
+        </EventData>
+    </Incident>
+</IODEF-Document>
+
