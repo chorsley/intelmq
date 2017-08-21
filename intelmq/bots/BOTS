@@ -212,6 +212,11 @@
             "module": "intelmq.bots.parsers.alienvault.parser_otx",
             "parameters": {}
         },
+        "ASERT Arbot": {
+            "description": "ASERT Arbor report parser",
+            "module": "intelmq.bots.parsers.asert_arbor.parser",
+            "parameters": {}
+        },
         "Autoshun": {
             "description": "Autoshun Parser is the bot responsible to parse the report and sanitize the information.",
             "module": "intelmq.bots.parsers.autoshun.parser",
