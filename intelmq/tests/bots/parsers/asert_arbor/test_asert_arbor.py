@@ -42,7 +42,7 @@ class TestAsertArborParserBot(test.BotTestCase, unittest.TestCase):
     def set_bot(cls):
         cls.bot_reference = AsertArborParserBot
         cls.default_input_message = ACCEPTED_REPORT
-        cls.sysconfig = {}
+        cls.sysconfig = {'feedname': 'Compromised-Website'}
 
     def test_event(self):
         """ Test if correct Event has been produced. """
