@@ -13,7 +13,7 @@ with open(
     SINGLE_FILE = handle.read()
 
 ACCEPTED_REPORT = {
-    "feed.name": "ZoneH Defacements",
+    "feed.name": "ASERT Arbor",
     "raw": utils.base64_encode(SINGLE_FILE),
     "__type": "Report",
     "time.observation": "2015-01-01T00:00:00+00:00",

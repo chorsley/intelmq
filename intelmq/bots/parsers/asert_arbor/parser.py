@@ -5,6 +5,7 @@ ASERT Arbor XML report parser
 import csv
 import io
 from urllib.parse import urlparse
+import functools
 
 from bs4 import BeautifulSoup
 
@@ -13,6 +14,26 @@ from intelmq.lib.bot import ParserBot, RewindableFileHandle
 from intelmq.lib.message import Event
 
 
+def lookup_obj(obj, attr_list, default=None):
+    """
+    obj: an object
+    attr_list: a list of strings to look up against soup_obj in sequence
+    """
+    try:
+        return functools.reduce(lambda x, y:
+            getattr(x, y), [obj] + attr_list)
+    except AttributeError:
+        return default
+
+
+ASERT_EVENTS = {
+    "dos": {
+        'classification.type': 'botnet drone',
+        'classification.taxonomy': 'Malicious Code',
+        'classification.identifier': 'botnet',
+    }
+}
+
 
 class AsertArborParserBot(ParserBot):
     def process(self):
@@ -20,12 +41,30 @@ class AsertArborParserBot(ParserBot):
 
         #self.logger.debug(report)
 
-        for incident in self.parse(report):
+        for incident, raw in self.parse(report):
             self.logger.debug(incident)
             print(incident)
             event = Event(report)
-            event.add("Impact", incident.get("IncidentID"))
+            event.add("raw", raw)
             self.logger.debug(event)
+
+            #impact = #incident.assessment.impact.attrs.get("type")
+            impact = lookup_obj(incident, ["assessment", "impact", "attrs"]).get("type")
+
+            if not impact:
+                self.logger.info("event didn't have a impact")
+                continue
+
+            try:
+                fields = ASERT_EVENTS[impact]
+            except KeyError:
+                self.logger.warn("Asert parser can't handle impact type {}, "
+                                 "skipping incident".format(impact))
+                continue
+
+            for imq_key, imq_val in fields.items():
+                event.add(imq_key, imq_val)
+
             #parsed_url = urlparse(row["domain"])
             #extra = {}
 
@@ -68,7 +107,8 @@ class AsertArborParserBot(ParserBot):
             # need fh to populate the raw field in main event handler
             print("Got incident")
             self.logger.debug("got incident")
-            yield incident
+            # returns parser object + original XML for raw
+            yield incident, str(incident)
 
 
 BOT = AsertArborParserBot
