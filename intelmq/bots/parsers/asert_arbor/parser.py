@@ -14,23 +14,32 @@ from intelmq.lib.bot import ParserBot, RewindableFileHandle
 from intelmq.lib.message import Event
 
 
-def lookup_obj(obj, attr_list, default=None):
+def lookup_obj(obj, attr_list, param=None, default=None):
     """
     obj: an object
     attr_list: a list of strings to look up against soup_obj in sequence
     """
     try:
-        return functools.reduce(lambda x, y:
-            getattr(x, y), [obj] + attr_list)
-    except AttributeError:
+        ref = functools.reduce(lambda x, y: getattr(x, y), [obj] + attr_list)
+        if param:
+            return ref[param]
+        else:
+            return ref
+    except (AttributeError, KeyError):
         return default
 
 
 ASERT_EVENTS = {
     "dos": {
-        'classification.type': 'botnet drone',
-        'classification.taxonomy': 'Malicious Code',
-        'classification.identifier': 'botnet',
+        'rule': lambda i: (
+            lookup_obj(i, ["assessment", "impact", "attrs"], param="type")),
+        'fields': {
+            'classification.type': lambda i: 'botnet drone',
+            'classification.taxonomy': lambda i: 'Malicious Code',
+            'classification.identifier': lambda i: 'botnet',
+            'time.source': lambda i:
+                lookup_obj(i, ['eventdata', 'starttime']),
+            }
     }
 }
 
@@ -47,23 +56,27 @@ class AsertArborParserBot(ParserBot):
             event = Event(report)
             event.add("raw", raw)
             self.logger.debug(event)
+            impact = None
+            attrs = None
 
             #impact = #incident.assessment.impact.attrs.get("type")
-            impact = lookup_obj(incident, ["assessment", "impact", "attrs"]).get("type")
+            # impact = lookup_obj(incident, ["assessment", "impact", "attrs"]).get("type")
 
-            if not impact:
-                self.logger.info("event didn't have a impact")
+            for incident_type, incident_attrs in ASERT_EVENTS.items():
+                impact = incident_attrs["rule"](incident)
+
+                if impact:
+                    print("!!!!! Got impact: %s" % impact)
+                    attrs = incident_attrs
+                    break
+            else:
+                self.logger.info("event didn't have a impact - "
+                                 "needs updated parser?")
                 continue
 
-            try:
-                fields = ASERT_EVENTS[impact]
-            except KeyError:
-                self.logger.warn("Asert parser can't handle impact type {}, "
-                                 "skipping incident".format(impact))
-                continue
-
-            for imq_key, imq_val in fields.items():
-                event.add(imq_key, imq_val)
+            for imq_key, imq_func in attrs["fields"].items():
+                print("!!!!! set field: %s" % imq_key)
+                event.add(imq_key, imq_func(incident))
 
             #parsed_url = urlparse(row["domain"])
             #extra = {}
