@@ -62,12 +62,12 @@ This configuration resides in the file `runtime.conf` in your intelmq's configur
 
 **Feed parameters**: Common configuration options for all collectors
 
-* `feed`: Name for the feed.
-* `accuracy`: Accuracy for the data of the feed.
-* `code`: Code for the feed.
-* `documentation`: Link to documentation for the feed.
-* `provider`: Name of the provider of the feed.
-* `rate_limit`: time interval (in seconds) between messages processing.
+* `feed`: Name for the feed (`feed.name`).
+* `accuracy`: Accuracy for the data of the feed (`feed.accuracy`).
+* `code`: Code for the feed (`feed.code`).
+* `documentation`: Link to documentation for the feed (`feed.documentation`).
+* `provider`: Name of the provider of the feed (`feed.provider`).
+* `rate_limit`: time interval (in seconds) between fetching data if applicable.
 
 **HTTP parameters**: Common URL fetching parameters used in multiple collectors
 
@@ -357,11 +357,12 @@ Lines starting with `'#'` will be ignored. Headers won't be interpreted.
 
 #### Configuration parameters
 
- * `"columns"`: A list of strings or a string of comma-separated values with field names. The names must match the harmonization's field names. E.g. 
+ * `"columns"`: A list of strings or a string of comma-separated values with field names. The names must match the harmonization's field names. Strings starting with `extra.` will be written into the Extra-Object of the DHO. E.g. 
    ```json
    [
         "",
-        "source.fqdn"
+        "source.fqdn",
+        "extra.http_host_header"
     ],
     ```
  * `"column_regex_search"`: Optional. A dictionary mapping field names (as given per the columns parameter) to regular expression. The field is evaulated using `re.search`. Eg. to get the ASN out of `AS1234` use: `{"source.asn": "[0-9]*"}`.
@@ -412,22 +413,6 @@ See the README.md
 #### Configuration Parameters:
 
 FIXME
-
-* * *
-
-### CERT.AT Contact
-
-#### Information:
-* `name:` certat-contact
-* `lookup:` https
-* `public:` yes
-* `cache (redis db):` none
-* `description:` https://contacts.cert.at offers an IP address to national CERT contact (and cc) mapping. See https://contacts.cert.at for more info.
-
-#### Configuration Parameters:
-
-* `filter`: (true/false) act as a a filter for AT.
-* `overwrite_cc`: set to true if you want to overwrite any potentially existing cc fields in the event.
 
 * * *
 
@@ -584,7 +569,7 @@ The configuration is called `modify.conf` and looks like this:
         }
     },
     {
-        "rule": "Spamhaus Cert conficker",
+        "rulename": "Spamhaus Cert conficker",
         "if": {
             "malware.name": "^conficker(ab)?$"
         },
@@ -593,7 +578,7 @@ The configuration is called `modify.conf` and looks like this:
         }
     },
     {
-        "rule": "bitdefender",
+        "rulename": "bitdefender",
         "if": {
             "malware.name": "bitdefender-(.*)$"
         },
@@ -602,7 +587,7 @@ The configuration is called `modify.conf` and looks like this:
         }
     },
     {
-        "rule": "urlzone",
+        "rulename": "urlzone",
         "if": {
             "malware.name": "^urlzone2?$"
         },
@@ -611,7 +596,7 @@ The configuration is called `modify.conf` and looks like this:
         }
     },
     {
-        "rule": "default",
+        "rulename": "default",
         "if": {
             "feed.name": "^Spamhaus Cert$"
         },
@@ -655,6 +640,22 @@ Assume we have an event with `feed.name = Spamhaus Cert` and `malware.name = feo
 #### Types
 
 If the rule is a string, a regex-search is performed, also for numeric values (`str()` is called on them). If the rule is numeric for numeric values, a simple comparison is done. If other types are mixed, a warning will be thrown.
+
+* * *
+
+### National CERT contact lookup by CERT.AT
+
+#### Information:
+* `name:` `national_cert_contact_certat`
+* `lookup:` https
+* `public:` yes
+* `cache (redis db):` none
+* `description:` https://contacts.cert.at offers an IP address to national CERT contact (and cc) mapping. See https://contacts.cert.at for more info.
+
+#### Configuration Parameters:
+
+* `filter`: (true/false) act as a a filter for AT.
+* `overwrite_cc`: set to true if you want to overwrite any potentially existing cc fields in the event.
 
 * * *
 
@@ -710,7 +711,11 @@ Sources:
 
 #### Configuration Parameters:
 
-FIXME
+* `query_ripe_db_asn`: Query for IPs at `http://rest.db.ripe.net/abuse-contact/%s.json`, default `true`
+* `query_ripe_db_ip`: Query for ASNs at `http://rest.db.ripe.net/abuse-contact/as%s.json`, default `true`
+* `query_ripe_stat_asn`: Query for ASNs at `https://stat.ripe.net/data/abuse-contact-finder/data.json?resource=%s`, default `true`
+* `query_ripe_stat_ip`: Query for IPs at `https://stat.ripe.net/data/abuse-contact-finder/data.json?resource=%s`, default `true`
+* `mode`: either `append` (default) or `replace`
 
 * * *
 

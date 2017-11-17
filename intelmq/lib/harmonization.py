@@ -135,6 +135,9 @@ class Boolean(GenericType):
 
 
 class ClassificationType(GenericType):
+    """
+    classification.type type. Allowed values are:
+     * """
 
     allowed_values = ['spam',
                       'malware',
@@ -158,8 +161,12 @@ class ClassificationType(GenericType):
                       'blacklist',
                       'other',
                       'unknown',
-                      'test'
+                      'test',
+                      'tor',
+                      'leak',
                       ]
+
+    __doc__ += '\n     * '.join(allowed_values)
 
     @staticmethod
     def is_valid(value, sanitize=False):
@@ -351,7 +358,7 @@ class FQDN(GenericType):
         if not GenericType().is_valid(value):
             return False
 
-        if value.rstrip('.') != value or value != value.lower():
+        if value.strip('.') != value or value != value.lower():
             return False
 
         if IPAddress().is_valid(value):
@@ -369,9 +376,12 @@ class FQDN(GenericType):
 
     @staticmethod
     def sanitize(value):
-        value = value.rstrip('.')
+        value = value.strip('.')
         if value:
-            return value.encode('idna').decode().lower()
+            try:
+                return value.encode('idna').decode().lower()
+            except UnicodeError:
+                return
 
     @staticmethod
     def to_ip(value):

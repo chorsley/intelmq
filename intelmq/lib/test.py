@@ -124,6 +124,7 @@ class BotTestCase(object):
         cls.pipe = None
         cls.sysconfig = {}
         cls.use_cache = False
+        cls.allowed_warning_count = 0
         cls.allowed_error_count = 0  # allows dumping of some lines
 
         cls.set_bot()
@@ -181,6 +182,9 @@ class BotTestCase(object):
         console_handler.setFormatter(console_formatter)
         logger.addHandler(console_handler)
         self.mocked_log = mocked_logger(logger)
+        logging.captureWarnings(True)
+        warnings_logger = logging.getLogger("py.warnings")
+        warnings_logger.addHandler(console_handler)
 
         class Parameters(object):
             source_queue = src_name
@@ -210,14 +214,15 @@ class BotTestCase(object):
             if self.default_input_message:  # None for collectors
                 self.input_queue = [self.default_input_message]
 
-    def run_bot(self, iterations: int=1, error_on_pipeline: bool=False):
+    def run_bot(self, iterations: int=1, error_on_pipeline: bool=False, prepare=True):
         """
         Call this method for actually doing a test run for the specified bot.
 
         Parameters:
             iterations: Bot instance will be run the given times, defaults to 1.
         """
-        self.prepare_bot()
+        if prepare:
+            self.prepare_bot()
         with mock.patch('intelmq.lib.utils.load_configuration',
                         new=self.mocked_config):
             with mock.patch('intelmq.lib.utils.log', self.mocked_log):
@@ -253,19 +258,23 @@ class BotTestCase(object):
                 self.assertIn('raw', event)
 
         """ Test if bot log messages are correctly formatted. """
-        self.assertLoglineMatches(0, "{} initialized with id {} and version"
-                                     " [0-9.]{{5}} \([a-zA-Z0-9,:. ]+\)( \[GCC\])?"
+        self.assertLoglineMatches(0, "{} initialized with id {} and intelmq [0-9a-z.]* and python"
+                                     " [0-9.]{{5}}\\+? \([a-zA-Z0-9,:. ]+\)( \[GCC\])?"
                                      " as process [0-9]+\."
                                      "".format(self.bot_name,
                                                self.bot_id), "INFO")
         self.assertRegexpMatchesLog("INFO - Bot is starting.")
         self.assertLoglineEqual(-1, "Bot stopped.", "INFO")
         self.assertNotRegexpMatchesLog("(ERROR.*?){%d}" % (self.allowed_error_count + 1))
+        self.assertNotRegexpMatchesLog("(WARNING.*?){%d}" % (self.allowed_warning_count + 1))
         self.assertNotRegexpMatchesLog("CRITICAL")
-        """ If no error happened (incl. tracebacks, we can check for formatting) """
-        if not self.allowed_error_count:  # This would fail for tracebacks currently
+        """ If no error happened (incl. tracebacks) we can check for formatting """
+        if not self.allowed_error_count:
             for logline in self.loglines:
                 fields = utils.parse_logline(logline)
+                if not isinstance(fields, dict):
+                    # Traceback
+                    continue
                 self.assertTrue(fields['message'][-1] in '.:?!',
                                 msg='Logline {!r} does not end with .? or !.'
                                     ''.format(fields['message']))
@@ -393,7 +402,11 @@ class BotTestCase(object):
         for logline in self.loglines:
             fields = utils.parse_logline(logline)
 
-            if levelname == fields["log_level"] and re.match(pattern, fields["message"]):
+            #  Exception tracebacks
+            if isinstance(fields, str):
+                if levelname == "ERROR" and re.match(pattern, fields):
+                    break
+            elif levelname == fields["log_level"] and re.match(pattern, fields["message"]):
                 break
         else:
             raise ValueError('No matching logline found.')
@@ -408,10 +421,7 @@ class BotTestCase(object):
         """Asserts that pattern doesn't match against log."""
 
         self.assertIsNotNone(self.loglines_buffer)
-        try:
-            self.assertNotRegexpMatches(self.loglines_buffer, pattern)
-        except AttributeError:
-            self.assertNotRegex(self.loglines_buffer, pattern)
+        self.assertNotRegex(self.loglines_buffer, pattern)
 
     def assertOutputQueueLen(self, queue_len=0):
         """
