@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<rss version="2.0">
+<channel>
+<title>abuse.ch ZeuS Tracker RSS Feed</title>
+<link>https://zeustracker.abuse.ch/monitor.php</link>
+<description>abuse.ch ZeuS Tracker RSS Feed. This feed shows the latest twenty ZeuS hosts which the tracker has captured.</description>
+<language>en</language>
+<docs>http://www.rssboard.org/rss-specification</docs>
+<generator>RSS Feed Engine</generator>
+<managingEditor>admin@abuse.ch (admin)</managingEditor>
+<webMaster>admin@abuse.ch (admin) </webMaster>
+<item>
+<title>slap.alliancekl.com (2017-11-07 07:14:59)</title>
+<link>https://zeustracker.abuse.ch/monitor.php?host=slap.alliancekl.com</link>
+<description>Host: slap.alliancekl.com, IP address: , SBL: Not listed, status: offline, level: 4, Malware: Citadel, AS: 0, country: </description>
+<guid>https://zeustracker.abuse.ch/monitor.php?host=slap.alliancekl.com&amp;id=a490f7f9441cf71679d7b9da6d188d8a</guid>
+</item>
+<item>
+<title>flex.comonwealthplc.com (2017-10-23 09:31:03)</title>
+<link>https://zeustracker.abuse.ch/monitor.php?host=flex.comonwealthplc.com</link>
+<description>Host: flex.comonwealthplc.com, IP address: , SBL: Not listed, status: offline, level: 4, Malware: Citadel, AS: 0, country: </description>
+<guid>https://zeustracker.abuse.ch/monitor.php?host=flex.comonwealthplc.com&amp;id=72f90cf92084b23b6e2acb59f1a0772a</guid>
+</item>
+<item>
+<title>kjkdndskjl.info (2017-10-22 14:01:34)</title>
+<link>https://zeustracker.abuse.ch/monitor.php?host=kjkdndskjl.info</link>
+<description>Host: kjkdndskjl.info, IP address: , SBL: Not listed, status: offline, level: 4, Malware: VMZeuS, AS: 0, country: </description>
+<guid>https://zeustracker.abuse.ch/monitor.php?host=kjkdndskjl.info&amp;id=e08b740f9b581ad0bb431333a8cf4280</guid>
+</item>
+<item>
+<title>slanted.excelonlinereader.services (2017-10-20 11:46:57)</title>
+<link>https://zeustracker.abuse.ch/monitor.php?host=slanted.excelonlinereader.services</link>
+<description>Host: slanted.excelonlinereader.services, IP address: , SBL: Not listed, status: offline, level: 4, Malware: Citadel, AS: 0, country: </description>
+<guid>https://zeustracker.abuse.ch/monitor.php?host=slanted.excelonlinereader.services&amp;id=20427b27562ea5b01a735fa6d53d9544</guid>
+</item>
+<item>
+<title>jad.fisbonline.com (2017-10-18 17:28:11)</title>
+<link>https://zeustracker.abuse.ch/monitor.php?host=jad.fisbonline.com</link>
+<description>Host: jad.fisbonline.com, IP address: 198.54.117.200, SBL: Not listed, status: online, level: 4, Malware: Citadel, AS: 22612, country: US</description>
+<guid>https://zeustracker.abuse.ch/monitor.php?host=jad.fisbonline.com&amp;id=58542adf8d7fd7f37e4faa65ed55015e</guid>
+</item>
+</channel>
+</rss>

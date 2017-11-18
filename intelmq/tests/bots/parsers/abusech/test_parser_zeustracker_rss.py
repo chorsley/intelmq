@@ -11,25 +11,25 @@ from intelmq.bots.parsers.cleanmx.parser import \
 with open(os.path.join(os.path.dirname(__file__), 'zeustracker_sample.rss')) as handle:
     RSS_FILE = handle.read()
 
-PHISHING_REPORT = {"feed.url": "https://zeustracker.abuse.ch/rss.php",
-                   "feed.name": "Abuse.ch Zeustracker RSS",
+with open(os.path.join(os.path.dirname(__file__), 'zeustracker_sample.rss.base64')) as handle:
+    BASE64_DATA = handle.read()
+
+ZEUS_REPORT = {"feed.url": "https://zeustracker.abuse.ch/rss.php",
+                   "feed.name": "Abuse.ch Zeustracker",
                    "__type": "Report",
                    "raw": utils.base64_encode(RSS_FILE),
                    "time.observation": "2015-11-02T13:11:43+00:00"
                    }
-PHISHING_EVENTS = [{
-                        'classification.type': 'phishing',
-                        'extra': '{"descr": "Cloudflare, Inc. CLOUD14 101 Townsend Street San Francisco CA 94107", "id": "11095095", "inetnum": "104.16.0.0 - 104.31.255.255", "netname": "CLOUDFLARENET", "ns1": "gail.ns.cloudflare.com", "ns2": "max.ns.cloudflare.com", "phishtank": "5140280", "response": "alive", "review": "104.28.14.106"}',
-                        'feed.name': 'CleanMX Phishing',
-                        'feed.url': 'http://support.clean-mx.de/clean-mx/xmlphishing?response=alive&domain=',
-                        'raw': 'PGVudHJ5PgoJPGxpbmU+MTwvbGluZT4KCTxpZD4xMTA5NTA5NTwvaWQ+Cgk8Zmlyc3Q+MTUwMjAzMTU5MDwvZmlyc3Q+Cgk8bGFzdD4wPC9sYXN0PgoJPHBoaXNodGFuaz41MTQwMjgwPC9waGlzaHRhbms+Cgk8dGFyZ2V0IC8+Cgk8dXJsPmh0dHA6Ly93d3cuYXV0b3Bvc3RpbmcuY29tLmJyL2kvPC91cmw+Cgk8cmVjZW50PnVwPC9yZWNlbnQ+Cgk8cmVzcG9uc2U+YWxpdmU8L3Jlc3BvbnNlPgoJPGlwPjEwNC4yOC4xNS4xMDY8L2lwPgoJPHJldmlldz4xMDQuMjguMTQuMTA2PC9yZXZpZXc+Cgk8ZG9tYWluPmF1dG9wb3N0aW5nLmNvbS5icjwvZG9tYWluPgoJPGNvdW50cnk+VVM8L2NvdW50cnk+Cgk8c291cmNlPkFSSU48L3NvdXJjZT4KCTxlbWFpbD5hYnVzZUBjbG91ZGZsYXJlLmNvbTwvZW1haWw+Cgk8aW5ldG51bT4xMDQuMTYuMC4wIC0gMTA0LjMxLjI1NS4yNTU8L2luZXRudW0+Cgk8bmV0bmFtZT5DTE9VREZMQVJFTkVUPC9uZXRuYW1lPgoJPGRlc2NyPkNsb3VkZmxhcmUsIEluYy4gQ0xPVUQxNCAxMDEgVG93bnNlbmQgU3RyZWV0IFNhbiBGcmFuY2lzY28gQ0EgOTQxMDc8L2Rlc2NyPgoJPG5zMT5nYWlsLm5zLmNsb3VkZmxhcmUuY29tPC9uczE+Cgk8bnMyPm1heC5ucy5jbG91ZGZsYXJlLmNvbTwvbnMyPgoJPG5zMyAvPgoJPG5zNCAvPgoJPG5zNSAvPgo8L2VudHJ5Pgo=',
-                        'source.abuse_contact': 'abuse@cloudflare.com',
-                        'source.fqdn': 'autoposting.com.br',
-                        'source.geolocation.cc': 'US',
-                        'source.ip': '104.28.15.106',
-                        'source.registry': 'ARIN',
-                        'source.url': 'http://www.autoposting.com.br/i/',
-                        'status': 'online',
+ZEUS_EVENTS = [{
+                        'classification.type': 'c&c server',
+                        'extra': '{}',
+                        'feed.name': 'Abuse.ch Zeustracker',
+                        'feed.url': 'https://zeustracker.abuse.ch/rss.php',
+                        'raw': BASE64_DATA,
+                        'source.fqdn': 'slap.alliancekl.com',
+                        'source.geolocation.cc': '',
+                        'source.ip': '',
+                        'status': 'offline',
                         'time.observation': '2015-11-02T13:11:43+00:00',
                         '__type': 'Event',
                     },
