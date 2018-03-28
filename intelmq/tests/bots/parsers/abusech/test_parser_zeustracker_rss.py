@@ -24,12 +24,10 @@ ZEUS_REPORT = {
 ZEUS_EVENTS = [
     {
             'classification.type': 'c&c',
-            'extra': '{}',
+            'extra': '{"level": "4", "sbl": "Not listed"}',
             'feed.name': 'Abuse.ch Zeustracker',
             'feed.url': 'https://zeustracker.abuse.ch/rss.php',
             'source.fqdn': 'slap.alliancekl.com',
-            'source.geolocation.cc': '',
-            'source.ip': '',
             'status': 'offline',
             'time.source': '2017-11-07T07:14:59+00:00',
             'time.observation': '2015-11-02T13:11:43+00:00',
@@ -38,17 +36,18 @@ ZEUS_EVENTS = [
     },
     {
             'classification.type': 'c&c',
-            'extra': '{}',
+            'extra': '{"level": "4", "sbl": "Not listed"}',
             'feed.name': 'Abuse.ch Zeustracker',
             'feed.url': 'https://zeustracker.abuse.ch/rss.php',
-            'source.fqdn': 'flex.comonwealthplc.com',
-            'source.geolocation.cc': '',
-            'source.ip': '',
-            'status': 'offline',
-            'time.source': '2017-10-23T09:31:03+00:00',
+            'source.fqdn': 'jad.fisbonline.com',
+            'source.geolocation.cc': 'US',
+            'source.ip': '198.54.117.200',
+            'source.asn': 22612,
+            'status': 'online',
+            'time.source': '2017-10-18T17:28:11+00:00',
             'time.observation': '2015-11-02T13:11:43+00:00',
             '__type': 'Event',
-            'raw': 'PGl0ZW0+Cjx0aXRsZT5mbGV4LmNvbW9ud2VhbHRocGxjLmNvbSAoMjAxNy0xMC0yMyAwOTozMTowMyk8L3RpdGxlPgo8bGluaz5odHRwczovL3pldXN0cmFja2VyLmFidXNlLmNoL21vbml0b3IucGhwP2hvc3Q9ZmxleC5jb21vbndlYWx0aHBsYy5jb208L2xpbms+CjxkZXNjcmlwdGlvbj5Ib3N0OiBmbGV4LmNvbW9ud2VhbHRocGxjLmNvbSwgSVAgYWRkcmVzczogLCBTQkw6IE5vdCBsaXN0ZWQsIHN0YXR1czogb2ZmbGluZSwgbGV2ZWw6IDQsIE1hbHdhcmU6IENpdGFkZWwsIEFTOiAwLCBjb3VudHJ5OiA8L2Rlc2NyaXB0aW9uPgo8Z3VpZD5odHRwczovL3pldXN0cmFja2VyLmFidXNlLmNoL21vbml0b3IucGhwP2hvc3Q9ZmxleC5jb21vbndlYWx0aHBsYy5jb20mYW1wO2lkPTcyZjkwY2Y5MjA4NGIyM2I2ZTJhY2I1OWYxYTA3NzJhPC9ndWlkPgo8L2l0ZW0+CjxpdGVtPgo=',
+            'raw': 'PGl0ZW0+Cjx0aXRsZT5qYWQuZmlzYm9ubGluZS5jb20gKDIwMTctMTAtMTggMTc6Mjg6MTEpPC90aXRsZT4KPGxpbms+aHR0cHM6Ly96ZXVzdHJhY2tlci5hYnVzZS5jaC9tb25pdG9yLnBocD9ob3N0PWphZC5maXNib25saW5lLmNvbTwvbGluaz4KPGRlc2NyaXB0aW9uPkhvc3Q6IGphZC5maXNib25saW5lLmNvbSwgSVAgYWRkcmVzczogMTk4LjU0LjExNy4yMDAsIFNCTDogTm90IGxpc3RlZCwgc3RhdHVzOiBvbmxpbmUsIGxldmVsOiA0LCBNYWx3YXJlOiBDaXRhZGVsLCBBUzogMjI2MTIsIGNvdW50cnk6IFVTPC9kZXNjcmlwdGlvbj4KPGd1aWQ+aHR0cHM6Ly96ZXVzdHJhY2tlci5hYnVzZS5jaC9tb25pdG9yLnBocD9ob3N0PWphZC5maXNib25saW5lLmNvbSZhbXA7aWQ9NTg1NDJhZGY4ZDdmZDdmMzdlNGZhYTY1ZWQ1NTAxNWU8L2d1aWQ+CjwvaXRlbT4K',
     }
 ]
 

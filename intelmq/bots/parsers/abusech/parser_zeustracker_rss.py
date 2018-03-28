@@ -65,16 +65,15 @@ class AbusechZeustrackerRSSParserBot(ParserBot):
 
         title = document.find('title').text
 
-        m = re.match(r'\((?P<datetime>[0-9-: ]*?)\)', title)
+        m = re.search(r'\((?P<source_time>[0-9\-: ]*?)\)', title)
 
         if m:
             try:
-                datetime = dateutil.parser.parse(m.group('datetime'))
+                source_time = dateutil.parser.parse(m.group('source_time'))
+                event.add('time.source',
+                          source_time.replace(tzinfo=pytz.utc).isoformat())
             except ValueError:
-                datetime = None
-
-            event.add('time.source',
-                      datetime.replace(tzinfo=pytz.utc).isoformat())
+                pass
 
         desc = document.find('description').text
 
@@ -82,7 +81,7 @@ class AbusechZeustrackerRSSParserBot(ParserBot):
         m = re.match(r"""Host:\s(?P<fqdn>.*?),\sIP\saddress:\s(?P<ip>.*?)?,\s
                      SBL:\s(?P<sbl>.*?)?,\sstatus:\s(?P<status>.*?),\s
                      level:\s(?P<level>.*?)?,\sMalware:\s(?P<malware>.*?)?,\s
-                     AS:\s(?P<asn>.*?)?,\scountry:(?P<cc>.*?)?""", desc, re.X)
+                     AS:\s(?P<asn>.*?)?,\scountry:\s(?P<cc>.*?)?$""", desc, re.X)
 
         if m:
             # we get IPs as hostnames, IntelMQ won't let us add as fqdn
@@ -97,10 +96,12 @@ class AbusechZeustrackerRSSParserBot(ParserBot):
                 event.add('status', m.group('status'))
             if m.group('level'):
                 extra['level'] = m.group('level')
-            if m.group('asn'):
-                event.add('source.asn', m.group('asn'))
-            if m.group('cc'):
-                event.add('source.geolocation.cc', m.group('cc'))
+            try:
+                if m.group('asn') and int(m.group('asn')) > 0:
+                    event.add('source.asn', m.group('asn'))
+            except TypeError:
+                pass
+            event.add('source.geolocation.cc', m.group('cc'))
 
         if extra:
             event.add('extra', extra)
