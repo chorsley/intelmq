@@ -22,9 +22,11 @@ ZEUS_REPORT = {
 }
 
 ZEUS_EVENTS = [
+    # offline C&C with no IP, ASN etc
     {
             'classification.type': 'c&c',
             'extra': '{"level": "4", "sbl": "Not listed"}',
+            'malware.name': 'citadel',
             'feed.name': 'Abuse.ch Zeustracker',
             'feed.url': 'https://zeustracker.abuse.ch/rss.php',
             'source.fqdn': 'slap.alliancekl.com',
@@ -34,9 +36,11 @@ ZEUS_EVENTS = [
             '__type': 'Event',
             'raw': 'PGl0ZW0+Cjx0aXRsZT5zbGFwLmFsbGlhbmNla2wuY29tICgyMDE3LTExLTA3IDA3OjE0OjU5KTwvdGl0bGU+CjxsaW5rPmh0dHBzOi8vemV1c3RyYWNrZXIuYWJ1c2UuY2gvbW9uaXRvci5waHA/aG9zdD1zbGFwLmFsbGlhbmNla2wuY29tPC9saW5rPgo8ZGVzY3JpcHRpb24+SG9zdDogc2xhcC5hbGxpYW5jZWtsLmNvbSwgSVAgYWRkcmVzczogLCBTQkw6IE5vdCBsaXN0ZWQsIHN0YXR1czogb2ZmbGluZSwgbGV2ZWw6IDQsIE1hbHdhcmU6IENpdGFkZWwsIEFTOiAwLCBjb3VudHJ5OiA8L2Rlc2NyaXB0aW9uPgo8Z3VpZD5odHRwczovL3pldXN0cmFja2VyLmFidXNlLmNoL21vbml0b3IucGhwP2hvc3Q9c2xhcC5hbGxpYW5jZWtsLmNvbSZhbXA7aWQ9YTQ5MGY3Zjk0NDFjZjcxNjc5ZDdiOWRhNmQxODhkOGE8L2d1aWQ+CjwvaXRlbT4K',
     },
+    # online C&C with IP, ASN
     {
             'classification.type': 'c&c',
             'extra': '{"level": "4", "sbl": "Not listed"}',
+            'malware.name': 'citadel',
             'feed.name': 'Abuse.ch Zeustracker',
             'feed.url': 'https://zeustracker.abuse.ch/rss.php',
             'source.fqdn': 'jad.fisbonline.com',
@@ -48,6 +52,39 @@ ZEUS_EVENTS = [
             'time.observation': '2015-11-02T13:11:43+00:00',
             '__type': 'Event',
             'raw': 'PGl0ZW0+Cjx0aXRsZT5qYWQuZmlzYm9ubGluZS5jb20gKDIwMTctMTAtMTggMTc6Mjg6MTEpPC90aXRsZT4KPGxpbms+aHR0cHM6Ly96ZXVzdHJhY2tlci5hYnVzZS5jaC9tb25pdG9yLnBocD9ob3N0PWphZC5maXNib25saW5lLmNvbTwvbGluaz4KPGRlc2NyaXB0aW9uPkhvc3Q6IGphZC5maXNib25saW5lLmNvbSwgSVAgYWRkcmVzczogMTk4LjU0LjExNy4yMDAsIFNCTDogTm90IGxpc3RlZCwgc3RhdHVzOiBvbmxpbmUsIGxldmVsOiA0LCBNYWx3YXJlOiBDaXRhZGVsLCBBUzogMjI2MTIsIGNvdW50cnk6IFVTPC9kZXNjcmlwdGlvbj4KPGd1aWQ+aHR0cHM6Ly96ZXVzdHJhY2tlci5hYnVzZS5jaC9tb25pdG9yLnBocD9ob3N0PWphZC5maXNib25saW5lLmNvbSZhbXA7aWQ9NTg1NDJhZGY4ZDdmZDdmMzdlNGZhYTY1ZWQ1NTAxNWU8L2d1aWQ+CjwvaXRlbT4K',
+    },
+    # variant online
+    {
+            'classification.type': 'c&c',
+            'extra': '{"level": "1", "sbl": "Not listed"}',
+            'malware.name': 'vmzeus',
+            'feed.name': 'Abuse.ch Zeustracker',
+            'feed.url': 'https://zeustracker.abuse.ch/rss.php',
+            'source.fqdn': 'l3d.pp.ru',
+            'source.geolocation.cc': 'RU',
+            'source.ip': '185.211.247.42',
+            'source.asn': 202984,
+            'status': 'online',
+            'time.source': '2017-08-16T14:06:33+00:00',
+            'time.observation': '2015-11-02T13:11:43+00:00',
+            '__type': 'Event',
+            'raw': 'PGl0ZW0+Cjx0aXRsZT5sM2QucHAucnUgKDIwMTctMDgtMTYgMTQ6MDY6MzMpPC90aXRsZT4KPGxpbms+aHR0cHM6Ly96ZXVzdHJhY2tlci5hYnVzZS5jaC9tb25pdG9yLnBocD9ob3N0PWwzZC5wcC5ydTwvbGluaz4KPGRlc2NyaXB0aW9uPkhvc3Q6IGwzZC5wcC5ydSwgSVAgYWRkcmVzczogMTg1LjIxMS4yNDcuNDIsIFNCTDogTm90IGxpc3RlZCwgc3RhdHVzOiBvbmxpbmUsIGxldmVsOiAxLCBNYWx3YXJlOiBWTVpldVMsIEFTOiAyMDI5ODQsIGNvdW50cnk6IFJVPC9kZXNjcmlwdGlvbj4KPGd1aWQ+aHR0cHM6Ly96ZXVzdHJhY2tlci5hYnVzZS5jaC9tb25pdG9yLnBocD9ob3N0PWwzZC5wcC5ydSZhbXA7aWQ9NjdiNmY1ZDU3NzUwMGY5MzI4ZjczMjY4NTFmNjAyNGM8L2d1aWQ+CjwvaXRlbT4K',
+    },
+    # IP-based host (IP not allowed as fqdn)
+    {
+            'classification.type': 'c&c',
+            'extra': '{"level": "4", "sbl": "Not listed"}',
+            'malware.name': 'citadel',
+            'feed.name': 'Abuse.ch Zeustracker',
+            'feed.url': 'https://zeustracker.abuse.ch/rss.php',
+            'source.geolocation.cc': 'EE',
+            'source.ip': '5.101.176.115',
+            'source.asn': 198068,
+            'status': 'unknown',
+            'time.source': '2017-03-18T17:15:46+00:00',
+            'time.observation': '2015-11-02T13:11:43+00:00',
+            '__type': 'Event',
+            'raw': 'PGl0ZW0+Cjx0aXRsZT41LjEwMS4xNzYuMTE1ICgyMDE3LTAzLTE4IDE3OjE1OjQ2KTwvdGl0bGU+CjxsaW5rPmh0dHBzOi8vemV1c3RyYWNrZXIuYWJ1c2UuY2gvbW9uaXRvci5waHA/aG9zdD01LjEwMS4xNzYuMTE1PC9saW5rPgo8ZGVzY3JpcHRpb24+SG9zdDogNS4xMDEuMTc2LjExNSwgSVAgYWRkcmVzczogNS4xMDEuMTc2LjExNSwgU0JMOiBOb3QgbGlzdGVkLCBzdGF0dXM6IHVua25vd24sIGxldmVsOiA0LCBNYWx3YXJlOiBDaXRhZGVsLCBBUzogMTk4MDY4LCBjb3VudHJ5OiBFRTwvZGVzY3JpcHRpb24+CjxndWlkPmh0dHBzOi8vemV1c3RyYWNrZXIuYWJ1c2UuY2gvbW9uaXRvci5waHA/aG9zdD01LjEwMS4xNzYuMTE1JmFtcDtpZD04ODNjZTY4ZjhlOWIxOGYxNjVlYmJkYjMxMjJjNjRjNDwvZ3VpZD4KPC9pdGVtPgo=',
     }
 ]
 
@@ -66,6 +103,8 @@ class TestAbusechZeustrackerRSSParserBot(test.BotTestCase, unittest.TestCase):
         self.run_bot()
         self.assertMessageEqual(0, ZEUS_EVENTS[0])
         self.assertMessageEqual(1, ZEUS_EVENTS[1])
+        self.assertMessageEqual(2, ZEUS_EVENTS[2])
+        self.assertMessageEqual(3, ZEUS_EVENTS[3])
 
 
 if __name__ == '__main__':  # pragma: no cover

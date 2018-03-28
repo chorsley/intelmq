@@ -96,6 +96,8 @@ class AbusechZeustrackerRSSParserBot(ParserBot):
                 event.add('status', m.group('status'))
             if m.group('level'):
                 extra['level'] = m.group('level')
+            if m.group('malware'):
+                event.add('malware.name', m.group('malware'))
             try:
                 if m.group('asn') and int(m.group('asn')) > 0:
                     event.add('source.asn', m.group('asn'))
