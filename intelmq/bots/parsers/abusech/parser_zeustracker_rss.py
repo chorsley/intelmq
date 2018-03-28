@@ -77,14 +77,15 @@ class AbusechZeustrackerRSSParserBot(ParserBot):
 
         desc = document.find('description').text
 
-        # Host: 5.101.176.115, IP address: 5.101.176.115, SBL: Not listed, status: unknown, level: 4, Malware: Citadel, AS: 198068, country: EE
+        # Host: 5.101.176.115, IP address: 5.101.176.115, SBL: Not listed,
+        # status: unknown, level: 4, Malware: Citadel, AS: 198068, country: EE
         m = re.match(r"""Host:\s(?P<fqdn>.*?),\sIP\saddress:\s(?P<ip>.*?)?,\s
                      SBL:\s(?P<sbl>.*?)?,\sstatus:\s(?P<status>.*?),\s
                      level:\s(?P<level>.*?)?,\sMalware:\s(?P<malware>.*?)?,\s
                      AS:\s(?P<asn>.*?)?,\scountry:\s(?P<cc>.*?)?$""", desc, re.X)
 
         if m:
-            # we get IPs as hostnames, IntelMQ won't let us add as fqdn
+            # we get IPs as hostnames, this won't be accepted as fqdn
             if not is_ip_address(m.group('fqdn')):
                 event.add('source.fqdn', m.group('fqdn'))
 
