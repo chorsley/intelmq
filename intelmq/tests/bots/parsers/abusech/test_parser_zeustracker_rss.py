@@ -23,7 +23,7 @@ ZEUS_REPORT = {
 
 ZEUS_EVENTS = [
     {
-            'classification.type': 'c&c server',
+            'classification.type': 'c&c',
             'extra': '{}',
             'feed.name': 'Abuse.ch Zeustracker',
             'feed.url': 'https://zeustracker.abuse.ch/rss.php',
@@ -36,7 +36,7 @@ ZEUS_EVENTS = [
             '__type': 'Event',
     },
     {
-            'classification.type': 'c&c server',
+            'classification.type': 'c&c',
             'extra': '{}',
             'feed.name': 'Abuse.ch Zeustracker',
             'feed.url': 'https://zeustracker.abuse.ch/rss.php',
@@ -62,7 +62,6 @@ class TestAbusechZeustrackerRSSParserBot(test.BotTestCase, unittest.TestCase):
         cls.default_input_message = ZEUS_REPORT
 
     def test_zeus(self):
-        #print(self.default_input_message)
         self.run_bot()
         self.assertMessageEqual(0, ZEUS_EVENTS[0])
         self.assertMessageEqual(1, ZEUS_EVENTS[1])
