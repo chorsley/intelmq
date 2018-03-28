@@ -13,7 +13,6 @@ PHISHING = OrderedDict([
     ("firsttime", "time.source"),
     ("last", "__IGNORE__"),
     ("lasttime", "__IGNORE__"),
-    ("phishtank", "extra"),
     ("target", "event_description.target"),
     ("url", "source.url"),
     ("recent", "status"),  # can be 'down', 'toggle' or 'up'
@@ -27,11 +26,6 @@ PHISHING = OrderedDict([
     ("inetnum", "extra"),  # network range, probably source.network
     ("netname", "extra"),
     ("descr", "extra"),
-    ("ns1", "extra"),
-    ("ns2", "extra"),
-    ("ns3", "extra"),
-    ("ns4", "extra"),
-    ("ns5", "extra"),
 ])
 
 
@@ -41,6 +35,7 @@ class AbusechZeustrackerRSSParserBot(ParserBot):
         raw_report = utils.base64_decode(report.get('raw'))
 
         document = ElementTree.fromstring(raw_report)
+        self.logger.info('Value without key found, skipping the!')
 
         for entry in document.iter(tag='entry'):
             entry_bytes = ElementTree.tostring(entry, encoding='utf-8', method='xml')
@@ -60,46 +55,48 @@ class AbusechZeustrackerRSSParserBot(ParserBot):
                 key = item.tag
                 value = item.text
 
-                if not value:
-                    continue
+                self.logger.debug("{}!".format(key))
 
-                if value == 'undef':
-                    continue
+                #if not value:
+                #    continue
 
-                if key is None:
-                    self.logger.warning('Value without key found, skipping the'
-                                        ' value: %r', value)
-                    continue
+                #if value == 'undef':
+                #    continue
 
-                key_orig = key
-                key = mapping[key]
+                #if key is None:
+                #    self.logger.warning('Value without key found, skipping the'
+                #                        ' value: %r', value)
+                #    continue
 
-                if key == "__IGNORE__":
-                    continue
+                #key_orig = key
+                #key = mapping[key]
 
-                if key == "source.fqdn" and event.is_valid('source.ip', value):
-                    continue
+                #if key == "__IGNORE__":
+                #    continue
 
-                if key == "time.source":
-                    value = value + " UTC"
+                #if key == "source.fqdn" and event.is_valid('source.ip', value):
+                #    continue
 
-                if key == "source.asn":
-                    if value.upper().startswith("ASNA"):
-                        continue
-                    for asn in value.upper().split(','):
-                        if asn.startswith("AS"):
-                            value = asn.split("AS")[1]
-                            break
+                #if key == "time.source":
+                #    value = value + " UTC"
 
-                if key == "status":
-                    if value == 'down':
-                        value = 'offline'
-                    elif value == 'up':
-                        value = 'online'
+                #if key == "source.asn":
+                #    if value.upper().startswith("ASNA"):
+                #        continue
+                #    for asn in value.upper().split(','):
+                #        if asn.startswith("AS"):
+                #            value = asn.split("AS")[1]
+                #            break
 
-                if key == 'extra':
-                    extra[key_orig] = value
-                    continue
+                #if key == "status":
+                #    if value == 'down':
+                #        value = 'offline'
+                #    elif value == 'up':
+                #        value = 'online'
+
+                #if key == 'extra':
+                #    extra[key_orig] = value
+                #    continue
 
                 event.add(key, value)
 
@@ -111,4 +108,4 @@ class AbusechZeustrackerRSSParserBot(ParserBot):
             yield event
 
 
-BOT = CleanMXParserBot
+BOT = AbusechZeustrackerRSSParserBot
