@@ -14,6 +14,7 @@ REQUIRES = [
     'pytz>=2012c',
     'redis>=2.10',
     'requests>=2.2.0',
+    'jinja2>=2.9.6',
 ]
 if sys.version_info < (3, 5):
     REQUIRES.append('typing')

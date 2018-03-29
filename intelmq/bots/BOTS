@@ -630,6 +630,14 @@
                 "hierarchical_output": false
             }
         },
+        "File IFAS": {
+            "description": "File IFAS is a modified file output to support IFAS schema",
+            "module": "intelmq.bots.outputs.file_ifas.output",
+            "parameters": {
+                "file": "/opt/intelmq/var/lib/bots/file-ifas-output/events.txt",
+                "hierarchical_output": false
+            }
+        },
         "Files": {
             "description": "Files is the bot responsible for lockfree saving of events into separate files.",
             "module": "intelmq.bots.outputs.files.output",
