@@ -29,7 +29,8 @@ import pytz
 
 __all__ = ['base64_decode', 'base64_encode', 'decode', 'encode',
            'load_configuration', 'load_parameters', 'log', 'parse_logline',
-           'reverse_readline', 'error_message_from_exc', 'parse_relative'
+           'reverse_readline', 'error_message_from_exc', 'parse_relative',
+           'RewindableFileHandle'
            ]
 
 # Used loglines format
@@ -396,3 +397,23 @@ def parse_relative(relative_time: str) -> int:
         return int(result[0][0]) * TIMESPANS[result[0][1]]
     else:
         raise ValueError("Could not process result of regex for attribute " + repr(relative_time))
+
+
+class RewindableFileHandle(object):
+    """
+    Can be used for easy retrieval of last input line to populate raw field
+    during CSV parsing.
+    """
+    def __init__(self, f):
+        self.f = f
+        self.current_line = None
+        self.first_line = None
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        self.current_line = next(self.f)
+        if self.first_line is None:
+            self.first_line = self.current_line
+        return self.current_line
