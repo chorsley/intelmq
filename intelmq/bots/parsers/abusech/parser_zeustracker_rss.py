@@ -1,36 +1,12 @@
 from xml.etree import ElementTree
 import re
 
-from collections import OrderedDict
 import dateutil.parser
 import pytz
 import socket
 
 from intelmq.lib import utils
 from intelmq.lib.bot import ParserBot
-from intelmq.lib.exceptions import ConfigurationError
-
-PHISHING = OrderedDict([
-    ("line", "__IGNORE__"),
-    ("id", "extra"),
-    ("first", "__IGNORE__"),
-    ("firsttime", "time.source"),
-    ("last", "__IGNORE__"),
-    ("lasttime", "__IGNORE__"),
-    ("target", "event_description.target"),
-    ("url", "source.url"),
-    ("recent", "status"),  # can be 'down', 'toggle' or 'up'
-    ("response", "extra"),
-    ("ip", "source.ip"),
-    ("review", "extra"),
-    ("domain", "source.fqdn"),
-    ("country", "source.geolocation.cc"),
-    ("source", "source.registry"),
-    ("email", "source.abuse_contact"),
-    ("inetnum", "extra"),  # network range, probably source.network
-    ("netname", "extra"),
-    ("descr", "extra"),
-])
 
 
 def is_ip_address(s):
