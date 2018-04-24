@@ -28,8 +28,16 @@ ACCEPTED_EVENT00 = {
     'classification.identifier': 'compromised-website',
     'extra': '{"accepted_date": "2016-06-01 13:20:21", "actor": "L33tz", ' +
              '"compromise_method": "known vulnerability (i.e. unpatched system)", ' +
-             '"http_target": "IIS/7.5", "os.name": "Win 2008", ' +
-             '"zoneh_report_id": "12345678"}',
+             '"defacement_grade": "homepage", ' +
+             '"defacement_type": "mass", ' +
+             '"http_target": "IIS/7.5", ' +
+             '"mirror": "./defaced/2016/01/11/defaced.example.com/defaced.example.com", ' +
+             '"os.name": "Win 2008", ' +
+             '"publish_state": "published", ' +
+             '"reason": "Heh...just for fun!", ' +
+             '"redefacement": "no", ' +
+             '"zoneh_report_id": "12345678"' +
+             '}',
     'protocol.application': 'http',
     'raw': utils.base64_encode(ACCEPTED_LINES[1]),
     'source.geolocation.cc': 'ZZ',

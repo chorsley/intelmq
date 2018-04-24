@@ -39,6 +39,12 @@ class ZoneHParserBot(ParserBot):
             extra["os.name"] = row["system"]
             extra["compromise_method"] = row["hackmode"]
             extra["zoneh_report_id"] = row["defacement_id"]
+            extra["mirror"] = row["image"]
+            extra["reason"] = row["reason"]
+            extra["defacement_type"] = row["type"]
+            extra["redefacement"] = row["redefacement"]
+            extra["publish_state"] = row["state"]
+            extra["defacement_grade"] = row["def_grade"]
             if extra:
                 event.add('extra', extra)
             self.send_message(event)
