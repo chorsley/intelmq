@@ -11,6 +11,23 @@ from intelmq.lib.bot import ParserBot, RewindableFileHandle
 from intelmq.lib.message import Event
 
 
+# field name from Zone-H CSV on left, IntelMQ extra.* name on right
+extra_field_map = {
+    "accept_date": "accept_date",
+    "attacker": "actor",
+    "def_grade": "defacement_grade",
+    "defacement_id": "zoneh_report_id",
+    "hackmode": "compromise_method",
+    "image": "mirror",
+    "reason": "reason",
+    "redefacement": "redefacement",
+    "state": "publish_state",
+    "system": "os.name",
+    "type": "defacement_type",
+    "web_server": "http_target",
+}
+
+
 class ZoneHParserBot(ParserBot):
     def process(self):
         report = self.receive_message()
@@ -32,19 +49,11 @@ class ZoneHParserBot(ParserBot):
             event.add('protocol.application', parsed_url.scheme)
             # yes, the URL field is called 'domain'
             event.add('source.url', row["domain"], raise_failure=False)
-            if row.get("accept_date"):
-                extra["accepted_date"] = row.get("accept_date")
-            extra["actor"] = row.get("attacker")
-            extra["http_target"] = row.get("web_server")
-            extra["os.name"] = row["system"]
-            extra["compromise_method"] = row["hackmode"]
-            extra["zoneh_report_id"] = row["defacement_id"]
-            extra["mirror"] = row["image"]
-            extra["reason"] = row["reason"]
-            extra["defacement_type"] = row["type"]
-            extra["redefacement"] = row["redefacement"]
-            extra["publish_state"] = row["state"]
-            extra["defacement_grade"] = row["def_grade"]
+
+            for (csv_field, imq_field) in extra_field_map.items():
+                if row.get(csv_field):
+                    extra[imq_field] = row.get(csv_field)
+
             if extra:
                 event.add('extra', extra)
             self.send_message(event)

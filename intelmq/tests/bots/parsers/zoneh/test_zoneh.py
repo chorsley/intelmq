@@ -26,7 +26,7 @@ ACCEPTED_EVENT00 = {
     'feed.name': 'ZoneH Defacements',
     'classification.type': 'compromised',
     'classification.identifier': 'compromised-website',
-    'extra': '{"accepted_date": "2016-06-01 13:20:21", "actor": "L33tz", ' +
+    'extra': '{"accept_date": "2016-06-01 13:20:21", "actor": "L33tz", ' +
              '"compromise_method": "known vulnerability (i.e. unpatched system)", ' +
              '"defacement_grade": "homepage", ' +
              '"defacement_type": "mass", ' +
@@ -54,9 +54,18 @@ ACCEPTED_EVENT01 = {
     'feed.name': 'ZoneH Defacements',
     'classification.type': 'compromised',
     'classification.identifier': 'compromised-website',
-    'extra': '{"accepted_date": "2017-06-11 10:00:00", "actor": "mayhab", ' +
-             '"compromise_method": "SQL Injection", "http_target": "Apache", ' +
-             '"os.name": "Linux", "zoneh_report_id": "12345679"}',
+    'extra': '{"accept_date": "2017-06-11 10:00:00", "actor": "mayhab", ' +
+             '"compromise_method": "SQL Injection", ' +
+             '"defacement_grade": "secondary", ' +
+             '"defacement_type": "regular", ' +
+             '"http_target": "Apache", ' +
+             '"mirror": "./defaced/2017/06/11/defaced2.example.com/example.com/mayhab.txt", ' +
+             '"os.name": "Linux", ' +
+             '"publish_state": "not published", ' +
+             '"reason": "Heh...just for fun!", ' +
+             '"redefacement": "yes", ' +
+             '"zoneh_report_id": "12345679"' +
+             '}',
     'protocol.application': 'http',
     'raw': utils.base64_encode(ACCEPTED_LINES[2]),
     'source.geolocation.cc': 'ZZ',
@@ -88,9 +97,18 @@ PENDING_EVENT00 = {
     'classification.type': 'compromised',
     'classification.identifier': 'compromised-website',
     'protocol.application': 'https',
-    'extra': ('{"actor": "xyz crew", "compromise_method": "Not available", ' +
-              '"http_target": "Apache", "os.name": "Linux", ' +
-              '"zoneh_report_id": "29715024"}'),
+    'extra': '{"actor": "xyz crew", ' +
+             '"compromise_method": "Not available", ' +
+             '"defacement_grade": "homepage", ' +
+             '"defacement_type": "regular", ' +
+             '"http_target": "Apache", ' +
+             '"mirror": "./defaced/2017/06/13/www.example.com/www.example.com", ' +
+             '"os.name": "Linux", ' +
+             '"publish_state": "not published", ' +
+             '"reason": "Not available", ' +
+             '"redefacement": "no", ' +
+             '"zoneh_report_id": "29715024"' +
+             '}',
     'raw': utils.base64_encode(PENDING_LINES[1]),
     'source.geolocation.cc': 'AU',
     'source.ip': '1.1.1.1',
