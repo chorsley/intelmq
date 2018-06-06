@@ -374,8 +374,28 @@ class FQDN(GenericType):
 
         return True
 
+    # TODO: remove when 1.1.0 released
+    @staticmethod
+    def sanitize_orig(value):
+        if hasattr(value, 'decode'):
+            value = value.decode('utf8').strip('.')
+        else:
+            value = value.strip('.')
+        if value:
+            try:
+                return value.encode('idna').decode().lower()
+            except UnicodeError:
+                return
+
+    # TODO: compare to final 1.1.0 sanitize method
     @staticmethod
     def sanitize(value):
+        try:
+            value = GenericType().sanitize(value)
+        except ValueError:
+            return
+        if not isinstance(value, str):
+            return
         value = value.strip('.')
         if value:
             try:
