@@ -33,6 +33,7 @@ PHISHING_EVENTS = [{
                         'source.url': 'http://www.autoposting.com.br/i/',
                         'status': 'online',
                         'time.observation': '2015-11-02T13:11:43+00:00',
+                        'time.source': '2017-08-06T14:59:50+00:00',
                         '__type': 'Event',
                     },
                     {
@@ -50,6 +51,7 @@ PHISHING_EVENTS = [{
                         'source.url': 'http://mvptrades.xyz/ad0be/view/?email=abuse@exxonmobil.com',
                         'status': 'online',
                         'time.observation': '2015-11-02T13:11:43+00:00',
+                        'time.source': '2017-08-23T17:04:43+00:00',
                         '__type': 'Event',
                     }]
 VIRUS_REPORT = {"feed.url": "http://support.clean-mx.de/clean-mx/xmlviruses?response=alive&domain=",
@@ -74,6 +76,7 @@ VIRUSES_EVENTS = [{
                     'source.url': 'http://quotescar.typepad.com/24wer.html',
                     'status': 'online',
                     'time.observation': '2015-11-02T13:11:43+00:00',
+                    'time.source': '2017-12-12T22:30:10+00:00',
                     '__type': 'Event',
                 },
                 {
@@ -92,6 +95,7 @@ VIRUSES_EVENTS = [{
                     'source.url': 'http://nickhookphotography.com/tem/zee/e3cad48b778d59a6613ca12d42547c33/login.php?cmd=login_submit&id=a2e2b7deac4fd185743a14a92f23b617a2e2b7deac4fd185743a14a92f23b617&session=a2e2b7deac4fd185743a14a92f23b617a2e2b7deac4fd185743a14a92f23b617',
                     'status': 'online',
                     'time.observation': '2015-11-02T13:11:43+00:00',
+                    'time.source': '2017-12-12T22:30:09+00:00',
                     '__type': 'Event',
                 }]
 
